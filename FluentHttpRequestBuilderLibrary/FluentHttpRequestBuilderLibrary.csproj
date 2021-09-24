@@ -43,7 +43,7 @@
         <Reference Include="System.Xml" />
     </ItemGroup>
     <ItemGroup>
-        <Compile Include="Constants\MediaTypes.cs" />
+        <Compile Include="Constants\MediaType.cs" />
         <Compile Include="Constants\ParameterType.cs" />
         <Compile Include="HttpRequestBuilder.cs" />
         <Compile Include="HttpRequestBuilderExtensions.cs" />

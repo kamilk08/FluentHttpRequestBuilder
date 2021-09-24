@@ -12,8 +12,8 @@
             Name = name;
         }
 
-        public static ParameterType ByteArray = new ParameterType(1, "ByteArray");
-        public static ParameterType Stream = new ParameterType(2, "Stream");
-        public static ParameterType String = new ParameterType(3, "String");
+        public static readonly ParameterType ByteArray = new ParameterType(1, "ByteArray");
+        public static readonly ParameterType Stream = new ParameterType(2, "Stream");
+        public static readonly ParameterType String = new ParameterType(3, "String");
     }
 }

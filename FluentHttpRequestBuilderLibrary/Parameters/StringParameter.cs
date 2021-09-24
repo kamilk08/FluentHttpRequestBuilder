@@ -21,7 +21,7 @@ namespace FluentHttpRequestBuilderLibrary.Parameters
             Key = key;
             Value = value;
             Encoding = Encoding.UTF8;
-            MediaType = MediaTypes.ApplicationJson;
+            MediaType = Constants.MediaType.ApplicationJson.Name;
         }
 
         public StringParameter(string key,string value, Encoding encoding = null, string mediaType = null)
@@ -29,7 +29,7 @@ namespace FluentHttpRequestBuilderLibrary.Parameters
             Key = key;
             Value = value;
             Encoding = encoding ?? Encoding.UTF8;
-            MediaType = mediaType ?? MediaTypes.ApplicationJson;
+            MediaType = mediaType ?? Constants.MediaType.ApplicationJson.Name;
         }
 
 
