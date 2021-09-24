@@ -280,10 +280,6 @@
         <Compile Include="TestObject.cs" />
     </ItemGroup>
     <ItemGroup>
-      <ProjectReference Include="..\FluentHttpRequestBuilderApi\FluentHttpRequestBuilderApi.csproj">
-        <Project>{2f63fdde-89e9-4cdb-8c16-7ebb55bdadb7}</Project>
-        <Name>FluentHttpRequestBuilderApi</Name>
-      </ProjectReference>
       <ProjectReference Include="..\FluentHttpRequestBuilderLibrary\FluentHttpRequestBuilderLibrary.csproj">
         <Project>{dce5edb6-bdff-43a9-aca8-6dde4f0c8687}</Project>
         <Name>FluentHttpRequestBuilderLibrary</Name>
