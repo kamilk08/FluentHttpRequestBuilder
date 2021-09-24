@@ -13,6 +13,7 @@
         }
         
         internal static readonly MediaType ApplicationJson = new MediaType(1,"application/json");
+        internal static readonly MediaType OctetStream = new MediaType(2,"application/octet-stream");
         
     }
 }
