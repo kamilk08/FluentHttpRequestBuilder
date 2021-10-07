@@ -7,18 +7,25 @@ using AutoFixture;
 using FluentAssertions;
 using FluentHttpRequestBuilderLibrary;
 using FluentHttpRequestBuilderLibraryTests.Constatns;
-using NUnit.Framework;
 using RichardSzalay.MockHttp;
+using Xunit;
 
 namespace FluentHttpRequestBuilderLibraryTests
 {
-    [TestFixture]
+    [Collection("Sequential")]
     public class BuilderHttpClientTests
     {
-        private Fixture _fixture;
-        private HttpRequestBuilder _builder;
+        private readonly Fixture _fixture;
+        private readonly HttpRequestBuilder _builder;
 
-        [Test]
+        public BuilderHttpClientTests()
+        {
+            _builder = new HttpRequestBuilder(new FakeStreamProvider());
+
+            _fixture = new Fixture();
+        }
+        
+        [Fact]
         public async Task GetRequest_WhenUserTriesToSendPostRequestWithJsonContent_ThenShouldGet200Response()
         {
             var request = _builder
@@ -43,7 +50,7 @@ namespace FluentHttpRequestBuilderLibraryTests
             response.StatusCode.Should().Be(HttpStatusCode.OK);
         }
 
-        [Test]
+        [Fact]
         public async Task GetRequest_WhenUserTriesToSendPostRequestWithStreamContent_ThenShouldGet200Response()
         {
             var request = _builder.InitializeRequest()
@@ -67,7 +74,7 @@ namespace FluentHttpRequestBuilderLibraryTests
 
         }
 
-        [Test]
+        [Fact]
         public async Task GetRequest_WhenUserTriesToSendPostRequestWithMultiPartFormData_ThenShouldGet200Response()
         {
             var request = _builder.InitializeRequest()
@@ -93,7 +100,7 @@ namespace FluentHttpRequestBuilderLibraryTests
             response.StatusCode.Should().Be(HttpStatusCode.OK);
         }
 
-        [Test]
+        [Fact]
         public async Task GetRequest_WhenUserTriesToSendPostRequestWithUrlEncodedForm_ThenShouldGet200Response()
         {
             var request = _builder
@@ -118,12 +125,5 @@ namespace FluentHttpRequestBuilderLibraryTests
             response.StatusCode.Should().Be(HttpStatusCode.OK);
         }
         
-        [SetUp]
-        public void SetUp()
-        {
-            _builder = new HttpRequestBuilder(new FakeStreamProvider());
-
-            _fixture = new Fixture();
-        }
     }
 }

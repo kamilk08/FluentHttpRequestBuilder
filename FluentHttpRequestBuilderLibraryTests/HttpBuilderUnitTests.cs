@@ -8,17 +8,23 @@ using AutoFixture;
 using FluentAssertions;
 using FluentHttpRequestBuilderLibrary;
 using Newtonsoft.Json;
-using NUnit.Framework;
+using Xunit;
 
 namespace FluentHttpRequestBuilderLibraryTests
 {
-    [TestFixture]
+    [Collection("Sequential")]
     public class HttpRequestBuilderUnitTests
     {
-        private HttpRequestBuilder _builder;
-        private Fixture _fixture;
+        private readonly HttpRequestBuilder _builder;
+        private readonly Fixture _fixture;
 
-        [Test]
+        public HttpRequestBuilderUnitTests()
+        {
+            _builder = new HttpRequestBuilder(new FakeStreamProvider());
+            _fixture = new Fixture();
+        }
+        
+        [Fact]
         public void WithMethod_WhenCalled_ShouldReturnMessageWithDesiredHttpMethodType()
         {
             var type = HttpMethod.Post;
@@ -30,7 +36,7 @@ namespace FluentHttpRequestBuilderLibraryTests
             request.Method.Should().Be(type);
         }
 
-        [Test]
+        [Fact]
         public void WithUri_WhenCalled_ShouldReturnMessageWithDesiredUriContent()
         {
             var uriContent = "http://www.google.com";
@@ -42,7 +48,7 @@ namespace FluentHttpRequestBuilderLibraryTests
             request.RequestUri.OriginalString.Should().Be(uriContent);
         }
 
-        [Test]
+        [Fact]
         public void WithContent_WhenCalled_ShouldSetDesiredTypeOfContentInCreatedRequest()
         {
             var bytes = Enumerable.Repeat<byte>(1, 4096).ToArray();
@@ -56,8 +62,7 @@ namespace FluentHttpRequestBuilderLibraryTests
             request.Content.Should().Be(content);
         }
 
-        [Test]
-        [TestCase()]
+        [Fact]
         public async Task WithStringContent_WhenCalled_ShouldSetDesiredStringContentInCreatedRequest()
         {
             var data = new TestObject(Guid.NewGuid(), _fixture.Create<int>(), _fixture.Create<List<char>>());
@@ -78,7 +83,7 @@ namespace FluentHttpRequestBuilderLibraryTests
             }
         }
 
-        [Test]
+        [Fact]
         public void AddHeader_WhenCalled_ShouldAddDesiredHeader()
         {
             var request = _builder.InitializeRequest()
@@ -92,7 +97,7 @@ namespace FluentHttpRequestBuilderLibraryTests
             request.Headers.Connection.Count.Should().Be(1);
         }
 
-        [Test]
+        [Fact]
         public void AddBearerToken_WhenCalled_ShouldAddBearerAuthenticationToken()
         {
             var rawToken =
@@ -107,7 +112,7 @@ namespace FluentHttpRequestBuilderLibraryTests
             request.Headers.Authorization.Parameter.Should().Be(rawToken);
         }
 
-        [Test]
+        [Fact]
         public async Task WithFormUrlEncodedContent_WhenCalled_ShouldCreateRequestWithContentOfTypeUrlEncoded()
         {
             var firstKey = "key";
@@ -145,7 +150,7 @@ namespace FluentHttpRequestBuilderLibraryTests
             dict[secondKey].Should().Be(secondValue);
         }
 
-        [Test]
+        [Fact]
         public void WithStreamContent_WhenCalled_ShouldCreateRequestWithStreamContent()
         {
 
@@ -158,7 +163,7 @@ namespace FluentHttpRequestBuilderLibraryTests
             request.Content.Should().BeOfType<StreamContent>();
         }
 
-        [Test]
+        [Fact]
         public void WithMultiPartFormData_WhenCalled_ShouldCreateRequestWithMultiPartFormData()
         {
             
@@ -174,10 +179,10 @@ namespace FluentHttpRequestBuilderLibraryTests
             request.Content.Should().BeOfType<MultipartFormDataContent>();
         }
 
-        [Test]
-        [TestCase(10)]
-        [TestCase(100)]
-        [TestCase(200)]
+        [Theory]
+        [InlineData(10)]
+        [InlineData(100)]
+        [InlineData(200)]
         public void WithStringContent_WhenCalledMultipleTimes_ShouldCreateMultipleRequests(int count)
         {
             var lst = new List<HttpRequestMessage>();
@@ -200,10 +205,10 @@ namespace FluentHttpRequestBuilderLibraryTests
             lst.Select(s => s.Content).Should().AllBeAssignableTo<StringContent>();
         }
 
-        [Test]
-        [TestCase(10)]
-        [TestCase(100)]
-        [TestCase(200)]
+        [Theory]
+        [InlineData(10)]
+        [InlineData(100)]
+        [InlineData(200)]
         public void WithFormUrlEncodedContent_WhenCalledMultipleTimes_ShouldCreateMultipleRequests(int count)
         {
             var lst = new List<HttpRequestMessage>();
@@ -228,10 +233,10 @@ namespace FluentHttpRequestBuilderLibraryTests
             lst.Select(s => s.Content).Should().AllBeAssignableTo<FormUrlEncodedContent>();
         }
         
-        [Test]
-        [TestCase(10)]
-        [TestCase(100)]
-        [TestCase(200)]
+        [Theory]
+        [InlineData(10)]
+        [InlineData(100)]
+        [InlineData(200)]
         public void WithStreamContent_WhenCalledMultipleTimes_ShouldCreateMultipleRequests(int count)
         {
             var lst = new List<HttpRequestMessage>();
@@ -255,10 +260,10 @@ namespace FluentHttpRequestBuilderLibraryTests
             lst.Select(s => s.Content).Should().AllBeAssignableTo<StreamContent>();
         }
         
-        [Test]
-        [TestCase(10)]
-        [TestCase(100)]
-        [TestCase(200)]
+        [Theory]
+        [InlineData(10)]
+        [InlineData(100)]
+        [InlineData(200)]
         public void WithMultiPartData_WhenCalledMultipleTimes_ShouldCreateMultipleRequests(int count)
         {
             var lst = new List<HttpRequestMessage>();
@@ -288,13 +293,6 @@ namespace FluentHttpRequestBuilderLibraryTests
             lst.Count.Should().Be(count);
             lst.Select(s => s.Method).All(s=>s==HttpMethod.Post).Should().BeTrue();
             lst.Select(s => s.Content).Should().AllBeAssignableTo<MultipartFormDataContent>();
-        }
-        
-        [SetUp]
-        public void SetUp()
-        {
-            _builder = new HttpRequestBuilder(new FakeStreamProvider());
-            _fixture = new Fixture();
         }
     }
 }
